@@ -1,0 +1,27 @@
+{% assign customer_country = request.customer_ip_address | customer_country %}
+{% assign discount_percentage = 0 %}
+
+{% if customer_country == "US" %}
+  {% assign discount_percentage = 10 %}
+{% elsif customer_country == "CA" %}
+  {% assign discount_percentage = 15 %}
+{% elsif customer_country == "UK" %}
+  {% assign discount_percentage = 20 %}
+{% endif %}
+
+{% if discount_percentage > 0 %}
+  {% assign original_price = product.price %}
+  {% assign discount_amount = original_price | times: discount_percentage | divided_by: 100 %}
+  {% assign discounted_price = original_price | minus: discount_amount %}
+
+  <span class="product-price" data-original-price="{{ original_price }}">
+    Original Price: {{ original_price | money }}
+  </span>
+  <span class="discounted-price">
+    Discounted Price: {{ discounted_price | money }}
+  </span>
+{% else %}
+  <span class="product-price">
+    Price: {{ product.price | money }}
+  </span>
+{% endif %}
